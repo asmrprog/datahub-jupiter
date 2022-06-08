@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { InfoCircleOutlined, RightOutlined } from '@ant-design/icons';
-import { Typography, Button, Tooltip, Popover } from 'antd';
+import { Typography, Button, Tooltip, Popover, message } from 'antd';
 import styled from 'styled-components/macro';
 import moment from 'moment';
 import { capitalizeFirstLetterOnly } from '../../../../../shared/textUtil';
 import { ANTD_GRAY } from '../../../constants';
-import { useEntityData } from '../../../EntityContext';
+import { useEntityData, useRefetch, useEntityUpdate } from '../../../EntityContext';
 import analytics, { EventType, EntityActionType } from '../../../../../analytics';
 import { EntityHealthStatus } from './EntityHealthStatus';
 import { getLocaleTimezone } from '../../../../../shared/time/timeUtils';
@@ -17,6 +17,8 @@ import { EntityType, PlatformPrivileges } from '../../../../../../types.generate
 import EntityCount from './EntityCount';
 import EntityName from './EntityName';
 import CopyUrn from '../../../../../shared/CopyUrn';
+
+import { GenericEntityUpdate } from '../../../types';
 
 const TitleWrapper = styled.div`
     display: flex;
@@ -88,6 +90,15 @@ const TopButtonsWrapper = styled.div`
     margin-bottom: 8px;
 `;
 
+const IngestionContainer = styled.div`
+    display: flex;
+    align-items: baseline;
+`;
+
+const IngestionStatus = styled.div`
+    margin-right: 8px;
+`;
+
 function getCanEditName(entityType: EntityType, privileges?: PlatformPrivileges) {
     switch (entityType) {
         case EntityType.GlossaryTerm:
@@ -104,15 +115,38 @@ type Props = {
     isNameEditable?: boolean;
 };
 
+const INGESTION_ALLOWED_LIST = ['PostgreSQL'];
+const INGESTION_REQUESTED_STATUS = 'REQUESTED';
+
 export const EntityHeader = ({ refreshBrowser, headerDropdownItems, isNameEditable }: Props) => {
     const { urn, entityType, entityData } = useEntityData();
     const me = useGetAuthenticatedUser();
+    const refetch = useRefetch();
     const [copiedUrn, setCopiedUrn] = useState(false);
     const basePlatformName = getPlatformName(entityData);
     const platformName = capitalizeFirstLetterOnly(basePlatformName);
     const externalUrl = entityData?.externalUrl || undefined;
     const entityCount = entityData?.entityCount;
     const hasExternalUrl = !!externalUrl;
+    const description = entityData?.editableProperties?.description || '';
+    const isIngestionAllowed = platformName && INGESTION_ALLOWED_LIST.includes(platformName);
+    const isIngestionDisabled =
+        entityData?.editableProperties?.dataPlatformIngestionStatus === INGESTION_REQUESTED_STATUS;
+
+    const updateEntity = useEntityUpdate<GenericEntityUpdate>();
+    const updateDescriptionLegacy = () => {
+        return updateEntity?.({
+            variables: {
+                urn,
+                input: {
+                    editableProperties: {
+                        description,
+                        dataPlatformIngestionStatus: INGESTION_REQUESTED_STATUS,
+                    },
+                },
+            },
+        });
+    };
 
     const sendAnalytics = () => {
         analytics.event({
@@ -121,6 +155,24 @@ export const EntityHeader = ({ refreshBrowser, headerDropdownItems, isNameEditab
             entityType,
             entityUrn: urn,
         });
+    };
+
+    const handleIngestion = async () => {
+        message.loading({ content: 'Ingesting...' });
+        try {
+            if (updateEntity) {
+                // Use the legacy update description path.
+                await updateDescriptionLegacy();
+            }
+            message.destroy();
+            message.success({ content: 'Ingestion Status Updated', duration: 2 });
+        } catch (e: unknown) {
+            message.destroy();
+            if (e instanceof Error) {
+                message.error({ content: `Failed to update description: \n ${e.message || ''}`, duration: 2 });
+            }
+        }
+        refetch?.();
     };
 
     /**
@@ -199,6 +251,18 @@ export const EntityHeader = ({ refreshBrowser, headerDropdownItems, isNameEditab
                         />
                     )}
                 </TopButtonsWrapper>
+                {isIngestionAllowed && (
+                    <IngestionContainer>
+                        <IngestionStatus>
+                            Ingestion Status : {entityData?.editableProperties?.dataPlatformIngestionStatus || 'NA'}
+                        </IngestionStatus>
+
+                        <Button onClick={handleIngestion} disabled={isIngestionDisabled}>
+                            Ingest
+                            <RightOutlined style={{ fontSize: 12 }} />
+                        </Button>
+                    </IngestionContainer>
+                )}
                 {hasExternalUrl && (
                     <Button href={externalUrl} onClick={sendAnalytics}>
                         View in {platformName}

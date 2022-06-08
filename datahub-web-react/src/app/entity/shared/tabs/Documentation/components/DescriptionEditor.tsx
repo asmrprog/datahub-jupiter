@@ -29,9 +29,14 @@ export const DescriptionEditor = ({ onComplete }: { onComplete?: () => void }) =
     const [isDescriptionUpdated, setIsDescriptionUpdated] = useState(editedDescriptions.hasOwnProperty(urn));
     const [cancelModalVisible, setCancelModalVisible] = useState(false);
 
+    const dataPlatformIngestionStatus = entityData?.editableProperties?.dataPlatformIngestionStatus || '';
+
     const updateDescriptionLegacy = () => {
         return updateEntity?.({
-            variables: { urn, input: { editableProperties: { description: updatedDescription || '' } } },
+            variables: {
+                urn,
+                input: { editableProperties: { description: updatedDescription || '', dataPlatformIngestionStatus } },
+            },
         });
     };
 

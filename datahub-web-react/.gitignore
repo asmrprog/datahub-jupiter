@@ -27,4 +27,5 @@ yarn-error.log*
 
 # gql codegen
 *.generated.ts
+!types.generated.ts
 /.vscode

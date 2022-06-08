@@ -199,6 +199,7 @@ fragment nonRecursiveDatasetFields on Dataset {
     }
     editableProperties {
         description
+        dataPlatformIngestionStatus
     }
     ownership {
         ...ownershipFields

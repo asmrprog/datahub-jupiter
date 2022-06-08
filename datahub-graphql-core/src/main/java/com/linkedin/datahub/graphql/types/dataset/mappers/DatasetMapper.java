@@ -129,6 +129,7 @@ public class DatasetMapper implements ModelMapper<EntityResponse, Dataset> {
         final EditableDatasetProperties editableDatasetProperties = new EditableDatasetProperties(dataMap);
         final DatasetEditableProperties editableProperties = new DatasetEditableProperties();
         editableProperties.setDescription(editableDatasetProperties.getDescription());
+        editableProperties.setDataPlatformIngestionStatus(editableDatasetProperties.getDataPlatformIngestionStatus());
         dataset.setEditableProperties(editableProperties);
     }
 

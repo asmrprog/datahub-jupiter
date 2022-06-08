@@ -2315,6 +2315,8 @@ type DatasetEditableProperties {
     Description of the Dataset
     """
     description: String
+
+    dataPlatformIngestionStatus: String
 }
 
 """
@@ -3461,6 +3463,8 @@ input DatasetEditablePropertiesUpdate {
     Writable description aka documentation for a Dataset
     """
     description: String!
+
+    dataPlatformIngestionStatus: String    
 }
 
 """

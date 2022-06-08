@@ -19,4 +19,10 @@ record EditableDatasetProperties includes ChangeAuditStamps {
     "fieldName": "editedDescription",
   }
   description: optional string
+
+  @Searchable = {
+    "fieldType": "TEXT",
+    "fieldName": "dataPlatformIngestionStatus",
+  }
+  dataPlatformIngestionStatus: optional string
 }
