@@ -10,7 +10,7 @@
         "@analytics/segment": "^1.1.0",
         "@ant-design/colors": "^5.0.0",
         "@ant-design/icons": "^4.3.0",
-        "@apollo/client": "^3.3.19",
+        "@apollo/client": "^3.7.16",
         "@craco/craco": "^6.1.1",
         "@cypress/webpack-preprocessor": "5.8.0",
         "@data-ui/xy-chart": "^0.0.84",
