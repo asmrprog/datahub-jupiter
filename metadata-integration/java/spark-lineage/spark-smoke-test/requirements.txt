@@ -3,3 +3,4 @@ pytest-dependency>=0.5.1
 requests>=2.27
 jsoncomparison>=1.1
 -e ../../../../metadata-ingestion[datahub-rest,datahub-kafka,mysql]
+setuptools>=65.5.1 # not directly required, pinned by Snyk to avoid a vulnerability
