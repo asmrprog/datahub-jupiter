@@ -2,7 +2,7 @@
 FROM confluentinc/cp-base-new:6.1.4 as confluent_base
 
 # Based on https://github.com/blacktop's alpine kafka build
-FROM python:3-alpine
+FROM python:3.13.0a3-alpine
 
 ENV KAFKA_VERSION 2.8.1
 ENV SCALA_VERSION 2.13
