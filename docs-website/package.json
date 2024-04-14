@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@docusaurus/core": "^2.0.0-beta.7",
-    "@docusaurus/plugin-ideal-image": "2.0.0-beta.7",
+    "@docusaurus/plugin-ideal-image": "2.0.1",
     "@docusaurus/preset-classic": "^2.0.0-beta.7",
     "@octokit/plugin-retry": "^3.0.9",
     "@octokit/plugin-throttling": "^3.5.1",
