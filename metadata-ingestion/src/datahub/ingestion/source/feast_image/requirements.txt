@@ -34,6 +34,6 @@ rsa==4.7.2; python_version >= "3.6" and python_version < "4" and python_full_ver
 six==1.16.0; python_full_version >= "3.7.1"
 tabulate==0.8.9; python_full_version >= "3.7.0"
 toml==0.10.2; python_full_version >= "3.7.0"
-tqdm==4.61.0; python_full_version >= "3.7.0"
+tqdm==4.66.3; python_full_version >= "3.7.0"
 typing-extensions==3.10.0.0; python_full_version >= "3.7.0"
 urllib3==1.26.4; python_full_version >= "3.7.0" and python_version < "4"
