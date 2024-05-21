@@ -2,3 +2,4 @@ avro-python3==1.8.2
 confluent-kafka[avro]==1.4.0
 PyYAML==5.4.1
 looker-sdk==0.1.3b20
+requests>=2.32.0 # not directly required, pinned by Snyk to avoid a vulnerability
